@@ -8,10 +8,10 @@
     Title="WinVerMediaChecker v1.0"
     Width="500"
     Height="650"
+    MinWidth="500"
+    MinHeight="650"
     Background="SlateGray"
     Loaded="Window_Loaded"
-    MinHeight="650"
-    MinWidth="500"
     ResizeMode="CanMinimize"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
@@ -30,10 +30,10 @@
         <GroupBox
             Grid.Row="0"
             Grid.ColumnSpan="2"
+            Height="auto"
             Margin="5"
             Padding="5"
-            Header="Step 1: Drive List"
-            Height="auto">
+            Header="Step 1: Drive List">
 
             <StackPanel>
                 <TextBlock
@@ -43,14 +43,16 @@
                     Text="After media has been inserted, click the refresh button below, then select the drive letter Windows assigned using this drop-down menu."
                     TextAlignment="Center"
                     TextWrapping="WrapWithOverflow" />
-                <ComboBox x:Name="availableDrivesDropDownMenu" Margin="15"
-                          SelectionChanged="availableDrivesDropDownMenu_SelectionChanged" />
+                <ComboBox
+                    x:Name="ActiveDrivesList"
+                    Margin="15"
+                    SelectionChanged="ActiveDrivesList_SelectionChanged" />
                 <Button
-                    x:Name="refreshDrivesButton"
-                    Margin="15 1"
+                    x:Name="RefreshDrivesButton"
+                    Margin="15,1"
                     Padding="10"
                     HorizontalAlignment="Right"
-                    Click="refreshDrivesButton_Click"
+                    Click="RefreshDrivesButton_Click"
                     ClickMode="Press"
                     Content="&#xE149;"
                     FontFamily="Segoe Fluent Icons"
@@ -88,14 +90,14 @@
                         Content="Selected Drive to Check:"
                         FontFamily="Consolas"
                         FontSize="16" />
-                    <Border BorderThickness="3"
-                            Margin="-10,3"
-                            CornerRadius="2"
-                            BorderBrush="Black">
+                    <Border
+                        Margin="-10,3"
+                        BorderBrush="Black"
+                        BorderThickness="3"
+                        CornerRadius="2">
                         <Label
-                            x:Name="driveSelectionConfirmation"
+                            x:Name="DriveSelection"
                             MinWidth="40"
-                            
                             Background="Beige"
                             FontFamily="Consolas"
                             FontSize="16"

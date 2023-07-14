@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace WinVerMediaChecker;
@@ -19,20 +17,38 @@ public partial class MainWindow : Window
 
     #endregion
 
+    #region Public Properties
+
+    public Dictionary<int, string> ActiveDrives { get; set; } = new();
+
+    #endregion
+
     #region Private Methods
+
+    private void ActiveDrivesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        DriveSelection.Content = ActiveDrives[ActiveDrivesList.SelectedIndex];
+    }
 
     private void DriveRefresh()
     {
-        availableDrivesDropDownMenu.Items.Clear();
-       _ = new GetDriveList(this).Refresh();
-
-
-
-
-
+        int _activeDriveCount = 1;
+        ActiveDrivesList.Items.Clear();
+        var _driveInfo = new MediaSearch(this).FindActiveDrives();
+        foreach (var activeDrive in _driveInfo)
+        {
+            var rootDirectoryString = activeDrive.RootDirectory.ToString();
+            ActiveDrives.Add(_activeDriveCount++, rootDirectoryString);
+            if (activeDrive.Name != rootDirectoryString)
+            {
+                ActiveDrivesList.Items.Add($"#{_activeDriveCount++,10}). | {rootDirectoryString.ToUpper(),5}   {activeDrive.Name}");
+                break;
+            }
+            ActiveDrivesList.Items.Add($"#{_activeDriveCount++,10}).    {rootDirectoryString.ToUpper(),5}");
+        }
     }
 
-    private void refreshDrivesButton_Click(object sender, RoutedEventArgs e)
+    private void RefreshDrivesButton_Click(object sender, RoutedEventArgs e)
     {
         DriveRefresh();
     }
@@ -40,13 +56,7 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         DriveRefresh();
-
     }
 
     #endregion
-
-    private void availableDrivesDropDownMenu_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-    {
-        driveSelectionConfirmation.Content = availableDrivesDropDownMenu.SelectedItem.ToString()!.Remove(0, 8);
-    }
 }
