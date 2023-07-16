@@ -23,7 +23,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -49,15 +49,16 @@
                     SelectionChanged="ActiveDrivesList_SelectionChanged" />
                 <Button
                     x:Name="RefreshDrivesButton"
+                    Width="45"
+                    Height="45"
                     Margin="10,5"
                     Padding="10"
-                    HorizontalAlignment="Right"
+                    HorizontalAlignment="Left"
                     Click="RefreshDrivesButton_Click"
                     Content="&#xE149;"
                     FontFamily="Segoe Fluent Icons"
                     FontSize="22"
                     FontWeight="Bold"
-                    Style="{DynamicResource ButtonStyle1}"
                     ToolTip="Refresh drive list" />
                 <ProgressBar
                     x:Name="DriveRefreshProgressBar"
@@ -90,20 +91,31 @@
             Margin="5"
             Padding="5"
             Header="Step 2: Confirm Selection">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label
-                        Margin="5"
+
+            <Grid>
+                <DockPanel Width="auto" HorizontalAlignment="Stretch">
+                    <Button
+                        x:Name="ExecuteComand"
+                        Margin="15,5"
                         Padding="10"
-                        Content="Selected Drive to Check:"
-                        FontFamily="Consolas"
-                        FontSize="16" />
+                        HorizontalAlignment="Left"
+                        Click="RefreshDrivesButton_Click"
+                        Content="&#xF8A5;"
+                        DockPanel.Dock="Bottom"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="26"
+                        FontWeight="Bold"
+                        ToolTip="Check Media!" />
+
                     <Label
                         x:Name="DriveSelection"
+                        Margin="15,5"
+                        HorizontalAlignment="Right"
                         Background="Beige"
                         BorderBrush="Transparent"
                         BorderThickness="0"
                         ClipToBounds="True"
+                        DockPanel.Dock="Right"
                         FocusVisualStyle="{StaticResource FocusVisual}"
                         Focusable="False"
                         FontFamily="Consolas"
@@ -112,15 +124,46 @@
                         Style="{DynamicResource LabelStyle1}"
                         UseLayoutRounding="True" />
                     <Label
+                        Margin="5"
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Content="Selected Drive to Check:"
+                        DockPanel.Dock="Left"
+                        FontFamily="Consolas"
+                        FontSize="16" />
+                    <Label
                         x:Name="ConfirmCheckMarkLabel"
                         Margin="15,5"
+                        HorizontalAlignment="Center"
                         Content="&#xE001;"
+                        DockPanel.Dock="Left"
                         FontFamily="Segoe Fluent Icons"
                         FontSize="30"
                         Foreground="SpringGreen"
                         Visibility="{Binding}" />
-                </StackPanel>
-            </StackPanel>
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="3"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Padding="5"
+            Header="Step 3: Results">
+            <Border
+                BorderBrush="Black"
+                BorderThickness="3"
+                CornerRadius="2">
+                <TextBlock
+                    x:Name="ResultsTextBlock"
+                    Padding="3"
+                    Background="SlateGray"
+                    FontFamily="Consolas"
+                    FontSize="16"
+                    Text="Results Area..."
+                    TextWrapping="Wrap" />
+            </Border>
         </GroupBox>
     </Grid>
 </Window>

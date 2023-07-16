@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace WinVerMediaChecker;
 
@@ -65,6 +66,16 @@ public class ActiveDrives
     public void Add(char driveLetter)
     {
         ActiveDriveRoots[ActiveDriveRoots.Length] = driveLetter;
+    }
+
+    public void Add(DirectoryInfo directory)
+    {
+        ActiveDriveRoots[ActiveDriveRoots.Length] = directory.Root.ToString().ToCharArray(0, 1)[0];
+    }
+
+    public void Add(DriveInfo drive)
+    {
+        ActiveDriveRoots[ActiveDriveRoots.Length] = drive.RootDirectory.ToString().ToCharArray(0, 1)[0];
     }
 
     public bool Contains(char driveLetter)

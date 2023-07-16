@@ -18,11 +18,11 @@ public partial class MainWindow : Window
 
     #endregion
 
+    // public ActiveDrives ActiveDrives { get; set; } = new();
+
     #region Public Properties
 
-    public ActiveDrives ActiveDrives { get; set; } = new();
-
-    // public Dictionary<int, string> ActiveDrives { get; set; } = new();
+    public List<string> ActiveDrives { get; set; } = new();
     public Dictionary<int, DirectoryInfo> ActiveRootDirectories { get; set; } = new();
 
     #endregion
@@ -34,10 +34,12 @@ public partial class MainWindow : Window
         if (ActiveDrivesList.SelectedIndex >= 1)
         {
             DriveSelection.Content = ActiveRootDirectories[ActiveDrivesList.SelectedIndex];
+            ConfirmCheckMarkLabel.Visibility = Visibility.Visible;
         }
         else
         {
             DriveSelection.Content = null;
+            ConfirmCheckMarkLabel.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -53,13 +55,14 @@ public partial class MainWindow : Window
             ActiveRootDirectories.Add(_activeDriveCount, activeDrive.RootDirectory);
             if (activeDrive.Name != rootDirectoryString)
             {
-                ActiveDrives.Add(_activeDriveCount++, $"#). | {rootDirectoryString.ToUpper(),2}   {activeDrive.Name,2}");
+                ActiveDrives.Add($"#{_activeDriveCount++,2}). | {rootDirectoryString.ToUpper(),2}, {activeDrive.Name,2}");
                 ActiveDrivesList.Items.Refresh();
                 break;
             }
-            ActiveDrives.Add(_activeDriveCount++, $"#). | {rootDirectoryString.ToUpper(),2}");
+            ActiveDrives.Add($"#{_activeDriveCount++,2}). | {rootDirectoryString.ToUpper(),2}");
             ActiveDrivesList.Items.Refresh();
         }
+        ActiveDrivesList.IsDropDownOpen = true;
     }
 
     private void RefreshDrivesButton_Click(object sender, RoutedEventArgs e)
@@ -71,14 +74,15 @@ public partial class MainWindow : Window
     {
         ActiveDrives.Clear();
         ActiveRootDirectories.Clear();
-        ActiveDrives.Add(0, "Select Drive Containing Media");
+        ActiveDrives.Add("Select Drive Containing Media");
         ActiveDrivesList.Items.Refresh();
         ActiveDrivesList.SelectedIndex = 0;
+        ConfirmCheckMarkLabel.Visibility = Visibility.Collapsed;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        ActiveDrivesList.ItemsSource = (System.Collections.IEnumerable)ActiveDrives;
+        ActiveDrivesList.ItemsSource = ActiveDrives;
         ResetDropDownMenu(this, new RoutedEventArgs());
     }
 
