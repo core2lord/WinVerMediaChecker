@@ -70,15 +70,12 @@ namespace WinVerMediaChecker
         {
             var driveLetterIndex = Enumerable.Range(1, 26);
 
-            while (_mainWindow is not null)
+            foreach (var driveLetterKey in driveLetterIndex)
             {
-                foreach (var driveLetterKey in driveLetterIndex)
+                var _driveInfo = new DriveInfo(_driveLetterList[driveLetterKey].ToString());
+                if (_driveInfo.IsReady == true)
                 {
-                    var _driveInfo = new DriveInfo(_driveLetterList[driveLetterKey].ToString());
-                    if (_driveInfo.IsReady == true)
-                    {
-                        yield return _driveInfo;
-                    }
+                    yield return _driveInfo;
                 }
             }
         }

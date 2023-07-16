@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace WinVerMediaChecker;
@@ -19,7 +20,10 @@ public partial class MainWindow : Window
 
     #region Public Properties
 
-    public Dictionary<int, string> ActiveDrives { get; set; } = new();
+    public ActiveDrives ActiveDrives { get; set; } = new();
+
+    // public Dictionary<int, string> ActiveDrives { get; set; } = new();
+    public Dictionary<int, DirectoryInfo> ActiveRootDirectories { get; set; } = new();
 
     #endregion
 
@@ -27,24 +31,34 @@ public partial class MainWindow : Window
 
     private void ActiveDrivesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        DriveSelection.Content = ActiveDrives[ActiveDrivesList.SelectedIndex];
+        if (ActiveDrivesList.SelectedIndex >= 1)
+        {
+            DriveSelection.Content = ActiveRootDirectories[ActiveDrivesList.SelectedIndex];
+        }
+        else
+        {
+            DriveSelection.Content = null;
+        }
     }
 
     private void DriveRefresh()
     {
         int _activeDriveCount = 1;
-        ActiveDrivesList.Items.Clear();
         var _driveInfo = new MediaSearch(this).FindActiveDrives();
+        ResetDropDownMenu(this, new RoutedEventArgs());
+
         foreach (var activeDrive in _driveInfo)
         {
             var rootDirectoryString = activeDrive.RootDirectory.ToString();
-            ActiveDrives.Add(_activeDriveCount++, rootDirectoryString);
+            ActiveRootDirectories.Add(_activeDriveCount, activeDrive.RootDirectory);
             if (activeDrive.Name != rootDirectoryString)
             {
-                ActiveDrivesList.Items.Add($"#{_activeDriveCount++,10}). | {rootDirectoryString.ToUpper(),5}   {activeDrive.Name}");
+                ActiveDrives.Add(_activeDriveCount++, $"#). | {rootDirectoryString.ToUpper(),2}   {activeDrive.Name,2}");
+                ActiveDrivesList.Items.Refresh();
                 break;
             }
-            ActiveDrivesList.Items.Add($"#{_activeDriveCount++,10}).    {rootDirectoryString.ToUpper(),5}");
+            ActiveDrives.Add(_activeDriveCount++, $"#). | {rootDirectoryString.ToUpper(),2}");
+            ActiveDrivesList.Items.Refresh();
         }
     }
 
@@ -53,9 +67,19 @@ public partial class MainWindow : Window
         DriveRefresh();
     }
 
+    private void ResetDropDownMenu(object sender, RoutedEventArgs e)
+    {
+        ActiveDrives.Clear();
+        ActiveRootDirectories.Clear();
+        ActiveDrives.Add(0, "Select Drive Containing Media");
+        ActiveDrivesList.Items.Refresh();
+        ActiveDrivesList.SelectedIndex = 0;
+    }
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        DriveRefresh();
+        ActiveDrivesList.ItemsSource = (System.Collections.IEnumerable)ActiveDrives;
+        ResetDropDownMenu(this, new RoutedEventArgs());
     }
 
     #endregion
