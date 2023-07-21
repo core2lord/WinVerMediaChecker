@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
@@ -11,6 +12,15 @@ namespace WinVerMediaChecker
 {
     internal class VersionCheckerCommand
     {
+        #region Public Constructors
+
+        public VersionCheckerCommand(MainWindow mainWindow)
+        {
+            _mainWindow = mainWindow;
+        }
+
+        #endregion
+
         #region Private Fields
 
         private MainWindow _mainWindow;
@@ -19,30 +29,33 @@ namespace WinVerMediaChecker
 
         #region Public Methods
 
-        public void ExecuteCommandSync(object command)
+        public void ExecuteCommandSync()
         {
             try
             {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
+                // create the ProcessStartInfo
+                // Incidentally, /c tells WindowsConsole that we want it to execute the command that follows,
                 // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =
-                new System.Diagnostics.ProcessStartInfo("cmd", "/c " + $"DISM / get - wiminfo / wimfile:\"{_mainWindow.DriveSelection.Content}sources\\install.wim\"")
+                ProcessStartInfo proccessStartInfo =
+                new("cmd", "/c " + $"DISM / get - wiminfo / wimfile:\"{_mainWindow.CurrentDriveSelection.Content}sources\\install.wim\"")
                 {
-                    // The following commands are needed to redirect the standard output.
-                    // This means that it will be redirected to the Process.StandardOutput StreamReader.
+                    // The following commands are needed to redirect the standard output to Process.StandardOutput StreamReader.
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
-                    // Do not create the black window.
-                    CreateNoWindow = true
+                    RedirectStandardError = true,
+                    ErrorDialog = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    // Do not create a new Console Window.
+                    CreateNoWindow = true,
                 };
                 // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo = procStartInfo;
-                proc.Start();
+                using Process activeProcess = new()
+                {
+                    StartInfo = proccessStartInfo
+                };
+                activeProcess.Start();
                 // Get the output into a string
-                string result = proc.StandardOutput.ReadToEnd();
+                string result = activeProcess.StandardOutput.ReadToEnd();
                 // Display the command output.
                 _mainWindow.ResultsTextBlock.Text = result;
                 Console.WriteLine(result);

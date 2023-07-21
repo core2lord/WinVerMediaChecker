@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 
 namespace WinVerMediaChecker;
 
@@ -22,47 +23,101 @@ public partial class MainWindow : Window
 
     #region Public Properties
 
-    public List<string> ActiveDrives { get; set; } = new();
     public Dictionary<int, DirectoryInfo> ActiveRootDirectories { get; set; } = new();
+    public List<string> ReadyStorage { get; set; } = new();
+    public Dictionary<int, DriveType> ReadyStorageType { get; set; } = new();
 
     #endregion
 
     #region Private Methods
 
-    private void ActiveDrivesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-    {
-        if (ActiveDrivesList.SelectedIndex >= 1)
-        {
-            DriveSelection.Content = ActiveRootDirectories[ActiveDrivesList.SelectedIndex];
-            ConfirmCheckMarkLabel.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            DriveSelection.Content = null;
-            ConfirmCheckMarkLabel.Visibility = Visibility.Collapsed;
-        }
-    }
-
     private void DriveRefresh()
     {
         int _activeDriveCount = 1;
         var _driveInfo = new MediaSearch(this).FindActiveDrives();
-        ResetDropDownMenu(this, new RoutedEventArgs());
+        ResetAll(this, new RoutedEventArgs());
 
         foreach (var activeDrive in _driveInfo)
         {
-            var rootDirectoryString = activeDrive.RootDirectory.ToString();
-            ActiveRootDirectories.Add(_activeDriveCount, activeDrive.RootDirectory);
-            if (activeDrive.Name != rootDirectoryString)
+            var storageRootString = activeDrive.RootDirectory.Root.ToString();
+            var storageRootStringUpper = activeDrive.RootDirectory.Root.ToString().ToUpper();
+            var storageVolumeLabel = activeDrive.VolumeLabel;
+            ActiveRootDirectories.Add(_activeDriveCount, activeDrive.RootDirectory.Root);
+            ReadyStorageType.Add(_activeDriveCount, activeDrive.DriveType);
+
+            if (activeDrive.Name != storageRootString)
             {
-                ActiveDrives.Add($"#{_activeDriveCount++,2}). | {rootDirectoryString.ToUpper(),2}, {activeDrive.Name,2}");
-                ActiveDrivesList.Items.Refresh();
+                ReadyStorage.Add($"#{_activeDriveCount++,2}). | {$"{{{activeDrive.DriveType}}}",2}, {$"({storageRootStringUpper})",4}), {$"[{storageVolumeLabel}]",2}");
+                ReadyDrivesComboBox.Items.Refresh();
                 break;
             }
-            ActiveDrives.Add($"#{_activeDriveCount++,2}). | {rootDirectoryString.ToUpper(),2}");
-            ActiveDrivesList.Items.Refresh();
+            ReadyStorage.Add($"#{_activeDriveCount++}) | {$"{{{activeDrive.DriveType}}}",2}, {$"({storageRootStringUpper})",4}");
+            ReadyDrivesComboBox.Items.Refresh();
         }
-        ActiveDrivesList.IsDropDownOpen = true;
+        ReadyDrivesComboBox.IsDropDownOpen = true;
+    }
+
+    private void ExecuteCommandButton_Click(object sender, RoutedEventArgs e)
+    {
+        VersionCheckerCommand versionChecker = new(this);
+        versionChecker.ExecuteCommandSync();
+    }
+
+    private void ReadyDrivesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        var selectedIndex = ReadyDrivesComboBox.SelectedIndex;
+        SolidColorBrush redBrush = new(Colors.Red);
+        SolidColorBrush greenBrush = new(Colors.Green);
+        StorageVerify.Visibility = Visibility.Visible;
+        if (selectedIndex >= 1)
+        {
+            var selectedRoot = ActiveRootDirectories[selectedIndex];
+            var driveType = ReadyStorageType[selectedIndex];
+            CurrentDriveSelection.Content = selectedRoot.ToString();
+            switch (driveType)
+            {
+                case DriveType.Removable:
+                    {
+                        // Removable Storage
+                        StorageVerify.Content = "\uECF3";
+                        break;
+                    }
+                case DriveType.Fixed:
+                    {
+                        // Checkmark
+                        StorageVerify.Content = "\uE001";
+                        break;
+                    }
+                case DriveType.Unknown:
+                    {
+                        // Checkmark
+                        StorageVerify.Content = "\uE001";
+                        break;
+                    }
+            }
+            if (!Path.Exists(selectedRoot.ToString()))
+            {
+                StorageVerify.Content = "\uEA39";
+                StorageVerify.Foreground = redBrush;
+                return;
+            }
+            if (!WindowsMediaVerify.VerifySelectedMedia(selectedRoot, out var validImageFileName))
+            {
+                StorageVerify.Content = "\uEA39";
+                StorageVerify.Foreground = redBrush;
+                ResultsTextBlock.Text = $"Unable to verify [{CurrentDriveSelection.Content.ToString()!.ToUpper()}] storage as valid Microsoft Windows Operating System installation source";
+                return;
+            }
+            ExecuteCommandButton.IsEnabled = true;
+            StorageVerify.Foreground = greenBrush;
+        }
+        else
+        {
+            GBox1.Visibility = Visibility.Visible;
+            CurrentDriveSelection.Content = null;
+            StorageVerify.Content = "\uEA39";
+            StorageVerify.Foreground = redBrush;
+        }
     }
 
     private void RefreshDrivesButton_Click(object sender, RoutedEventArgs e)
@@ -70,20 +125,22 @@ public partial class MainWindow : Window
         DriveRefresh();
     }
 
-    private void ResetDropDownMenu(object sender, RoutedEventArgs e)
+    private void ResetAll(object sender, RoutedEventArgs e)
     {
-        ActiveDrives.Clear();
+        ReadyStorage.Clear();
         ActiveRootDirectories.Clear();
-        ActiveDrives.Add("Select Drive Containing Media");
-        ActiveDrivesList.Items.Refresh();
-        ActiveDrivesList.SelectedIndex = 0;
-        ConfirmCheckMarkLabel.Visibility = Visibility.Collapsed;
+        ReadyStorage.Add("Select Drive Containing Media");
+        ReadyDrivesComboBox.Items.Refresh();
+        ReadyDrivesComboBox.SelectedIndex = 0;
+        StorageVerify.Visibility = Visibility.Collapsed;
+        ExecuteCommandButton.IsEnabled = false;
+        ResultsTextBlock.Text = "Results Log...";
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        ActiveDrivesList.ItemsSource = ActiveDrives;
-        ResetDropDownMenu(this, new RoutedEventArgs());
+        ReadyDrivesComboBox.ItemsSource = ReadyStorage;
+        ResetAll(this, new RoutedEventArgs());
     }
 
     #endregion
