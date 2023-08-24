@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace WinVerMediaChecker
 {
-    internal class VersionCheckerCommand
+    public class VersionCheckerCommand
     {
         #region Public Constructors
 
@@ -19,17 +12,17 @@ namespace WinVerMediaChecker
             _mainWindow = mainWindow;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region Private Fields
 
-        private MainWindow _mainWindow;
+        public MainWindow _mainWindow;
 
-        #endregion
+        #endregion Private Fields
 
         #region Public Methods
 
-        public void ExecuteCommandSync()
+        public void ExecuteCommandSync(string imagePath)
         {
             try
             {
@@ -37,7 +30,7 @@ namespace WinVerMediaChecker
                 // Incidentally, /c tells WindowsConsole that we want it to execute the command that follows,
                 // and then exit.
                 ProcessStartInfo proccessStartInfo =
-                new("cmd", "/c " + $"DISM / get - wiminfo / wimfile:\"{_mainWindow.CurrentDriveSelection.Content}sources\\install.wim\"")
+                new("cmd", "/c " + $"DISM /Get-WimInfo /wimfile:\"{_mainWindow.CurrentDriveSelection.Content}sources\\{imagePath}\"")
                 {
                     // The following commands are needed to redirect the standard output to Process.StandardOutput StreamReader.
                     RedirectStandardOutput = true,
@@ -57,15 +50,16 @@ namespace WinVerMediaChecker
                 // Get the output into a string
                 string result = activeProcess.StandardOutput.ReadToEnd();
                 // Display the command output.
-                _mainWindow.ResultsTextBlock.Text = result;
+                _mainWindow.AppendResultsLogText(result);
                 Console.WriteLine(result);
             }
             catch (Exception e)
             {
+                _mainWindow.AppendResultsLogText(e.ToString());
                 Console.WriteLine($"{e.InnerException}\n{e.Message}");
             }
         }
 
-        #endregion
+        #endregion Public Methods
     }
 }

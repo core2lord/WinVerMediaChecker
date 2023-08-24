@@ -4,29 +4,13 @@ using System.Linq;
 
 namespace WinVerMediaChecker
 {
-    internal class MediaSearch
+    public class GetMedia
     {
-        #region Public Constructors
+        #region Public Methods
 
-        public MediaSearch(MainWindow? mainWindow)
+        public IEnumerable<DriveInfo> FindActiveDrives()
         {
-            _mainWindow = mainWindow;
-        }
-
-        #endregion
-
-        #region Private Fields
-
-        private readonly MainWindow? _mainWindow;
-
-        #endregion
-
-        #region Public Fields
-
-        /// <summary>
-        /// Readonly <see cref="Dictionary{int, char}"/> containing all-lower characters of alphabet 'a' to 'z' using an index starting with '1'.
-        /// </summary>
-        public readonly Dictionary<int, char> _driveLetterList = new()
+            Dictionary<int, char> _driveLetterList = new()
         {
             {1, 'a'},
             {2, 'b'},
@@ -55,19 +39,6 @@ namespace WinVerMediaChecker
             {25, 'y'},
             {26, 'z'}
         };
-
-        #endregion
-
-        #region Public Properties
-
-        public char[] ReadyDriveArray { get; set; }
-
-        #endregion
-
-        #region Public Methods
-
-        public IEnumerable<DriveInfo> FindActiveDrives()
-        {
             var driveLetterIndex = Enumerable.Range(1, 26);
 
             foreach (var driveLetterKey in driveLetterIndex)
@@ -80,6 +51,6 @@ namespace WinVerMediaChecker
             }
         }
 
-        #endregion
+        #endregion Public Methods
     }
 }

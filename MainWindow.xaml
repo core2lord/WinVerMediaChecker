@@ -1,20 +1,20 @@
 ﻿<Window
     x:Class="WinVerMediaChecker.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WinVerMediaChecker"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WinVerMediaChecker"
     Title="WinVerMediaChecker v1.0"
-    Width="500"
-    Height="650"
-    MinWidth="500"
-    MinHeight="650"
-    Background="{x:Static SystemColors.WindowFrameBrush}"
+    MinWidth="440"
+    MinHeight="450"
+    MaxWidth="440"
+    Background="{StaticResource Window.Background.Brush}"
     FontFamily="Consolas"
+    Foreground="White"
     Loaded="Window_Loaded"
     ResizeMode="CanMinimize"
-    SizeToContent="Height"
+    SizeToContent="WidthAndHeight"
     UseLayoutRounding="True"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
@@ -31,88 +31,72 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <GroupBox
-            x:Name="GBox1"
+            x:Name="GroupBoxTop"
             Grid.Row="0"
             Grid.ColumnSpan="2"
             Height="auto"
             Margin="5"
             Padding="5"
+            BorderBrush="Black"
             Header="Drive List"
-            Visibility="Collapsed">
-
+            Visibility="Visible">
             <StackPanel>
-                <TextBlock
-                    FontFamily="Consolas"
-                    FontSize="16"
-                    FontWeight="UltraLight"
-                    Text="Unable to verify location of Windows installation media. Use the refresh button below, after inserting Windows installation media to try again."
-                    TextAlignment="Center"
-                    TextWrapping="WrapWithOverflow" />
-                <ComboBox
-                    x:Name="ReadyDrivesComboBox"
-                    Margin="10"
-                    SelectionChanged="ReadyDrivesComboBox_SelectionChanged" />
-                <Button
-                    x:Name="RefreshDrivesButton"
-                    Width="45"
-                    Height="45"
-                    Margin="10,5"
-                    Padding="10"
-                    HorizontalAlignment="Left"
-                    Click="RefreshDrivesButton_Click"
-                    Content="&#xE149;"
-                    FontFamily="Segoe Fluent Icons"
-                    FontSize="22"
-                    FontWeight="Bold"
-                    Style="{StaticResource ButtonStyle1}"
-                    ToolTip="Refresh drive list" />
-                <ProgressBar
-                    x:Name="DriveRefreshProgressBar"
-                    Width="auto"
-                    Height="10"
-                    Margin="10"
-                    Visibility="Collapsed" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ComboBox
+                        x:Name="ReadyDrivesComboBox"
+                        Grid.ColumnSpan="2"
+                        Margin="10,5"
+                        SelectionChanged="ReadyDrivesComboBox_SelectionChanged" />
+
+                    <local:CustomButton
+                        x:Name="RefreshDrivesButton"
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
+                        ButtonLabel="Refresh"
+                        Click="RefreshDrivesButton_Click"
+                        Content="&#xE149;"
+                        ToolTip="Refresh drive list" />
+                    <local:CustomButton
+                        x:Name="ExecuteCommandButton"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        ButtonLabel="Run"
+                        Click="ExecuteCommandButton_Click"
+                        Content="&#xF8A5;"
+                        ToolTip="Check Media!" />
+
+                    <ProgressBar
+                        x:Name="DriveRefreshProgressBar"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Width="auto"
+                        Height="10"
+                        Margin="10"
+                        Visibility="Collapsed" />
+                </Grid>
             </StackPanel>
         </GroupBox>
-        <Separator
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="5"
-            VerticalAlignment="Top"
-            Background="{StaticResource BlueGradient.LinearBrush}"
-            Opacity=".25"
-            RenderTransformOrigin="0.5,0.5">
-            <Separator.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="5" />
-                    <SkewTransform />
-                    <RotateTransform />
-                    <TranslateTransform />
-                </TransformGroup>
-            </Separator.RenderTransform>
-        </Separator>
         <GroupBox
-            x:Name="GBox2"
+            x:Name="GroupBoxMiddle"
             Grid.Row="2"
             Grid.ColumnSpan="2"
             Margin="5"
             Padding="5"
-            Header="Step 2: Confirm Selection">
+            BorderBrush="Black"
+            Header="Media Validation">
 
             <Grid>
                 <DockPanel Width="auto" HorizontalAlignment="Stretch">
-                    <Button
-                        x:Name="ExecuteCommandButton"
-                        Margin="15,5"
-                        Padding="10"
-                        HorizontalAlignment="Left"
-                        Click="ExecuteCommandButton_Click"
-                        Content="&#xF8A5;"
-                        DockPanel.Dock="Bottom"
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="26"
-                        FontWeight="Bold"
-                        ToolTip="Check Media!" />
 
                     <Label
                         x:Name="CurrentDriveSelection"
@@ -123,23 +107,23 @@
                         BorderThickness="0"
                         ClipToBounds="True"
                         DockPanel.Dock="Right"
-                        FocusVisualStyle="{StaticResource FocusVisual}"
                         Focusable="False"
                         FontFamily="Consolas"
                         FontSize="16"
                         FontWeight="Bold"
                         Style="{DynamicResource LabelStyle1}"
-                        UseLayoutRounding="True" />
+                        UseLayoutRounding="False" />
                     <Label
                         Margin="5"
-                        Padding="10"
+                        Padding="5"
                         HorizontalAlignment="Stretch"
-                        Content="Selected Drive to Check:"
+                        Content="Media Verification Status:"
                         DockPanel.Dock="Left"
                         FontFamily="Consolas"
-                        FontSize="16" />
+                        FontSize="16"
+                        Foreground="White" />
                     <Label
-                        x:Name="StorageVerify"
+                        x:Name="StorageVerifyLabel"
                         Margin="15,5"
                         HorizontalAlignment="Center"
                         Content="&#xE001;"
@@ -152,30 +136,40 @@
             </Grid>
         </GroupBox>
         <GroupBox
-            x:Name="GBox3"
+            x:Name="GroupBoxBottom"
             Grid.Row="3"
             Grid.RowSpan="2"
             Grid.ColumnSpan="2"
             Margin="5"
             Padding="5"
-            Header="Step 3: Results">
+            BorderBrush="Black"
+            Header="Results">
             <Border
+                Margin="5,1"
                 BorderBrush="Black"
-                BorderThickness="3"
+                BorderThickness="2"
                 CornerRadius="2">
+                <Border.Background>
+                    <LinearGradientBrush Opacity="0.5" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0.5" Color="Black" />
+                        <GradientStop Offset="1" Color="White" />
+                    </LinearGradientBrush>
+                </Border.Background>
                 <ScrollViewer
                     Padding="2"
                     HorizontalScrollBarVisibility="Disabled"
                     SnapsToDevicePixels="True"
                     VerticalScrollBarVisibility="Visible">
+
                     <TextBlock
                         x:Name="ResultsTextBlock"
                         Padding="3"
-                        Background="SlateGray"
+                        Background="Transparent"
                         FontFamily="Consolas"
-                        FontSize="16"
-                        Text="Results Area..."
-                        TextWrapping="Wrap"
+                        FontSize="14"
+                        FontWeight="ExtraLight"
+                        Text="[Results] logging..."
+                        TextWrapping="WrapWithOverflow"
                         UseLayoutRounding="True" />
                 </ScrollViewer>
             </Border>

@@ -14,14 +14,14 @@ public class ActiveDrives
         ActiveDriveRoots = Array.Empty<char>();
     }
 
-    #endregion
+    #endregion Public Constructors
 
     #region Private Fields
 
     private char[] _activeDriveRoots;
     private int _count;
 
-    #endregion
+    #endregion Private Fields
 
     #region Public Properties
 
@@ -49,7 +49,7 @@ public class ActiveDrives
         }
     }
 
-    #endregion
+    #endregion Public Properties
 
     #region Public Indexers
 
@@ -59,7 +59,7 @@ public class ActiveDrives
         set { ActiveDriveRoots![Index] = value; }
     }
 
-    #endregion
+    #endregion Public Indexers
 
     #region Public Methods
 
@@ -116,5 +116,5 @@ public class ActiveDrives
         }
     }
 
-    #endregion
+    #endregion Public Methods
 }
