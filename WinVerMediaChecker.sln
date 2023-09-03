@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinVerMediaChecker", "WinVerMediaChecker.csproj", "{0C0973B7-5E63-4B2D-A8A6-DCEAB5695948}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinVerMediaChecker", "WinVerMediaChecker.csproj", "{0C0973B7-5E63-4B2D-A8A6-DCEAB5695948}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinVerMediaCheckerUI", "..\WinVerMediaCheckerUI\WinVerMediaCheckerUI.csproj", "{141C9EEE-8791-451A-B635-E9D9244CB075}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinVerMediaCheckerUI.Core", "..\WinVerMediaCheckerUI.Core\WinVerMediaCheckerUI.Core.csproj", "{110D0089-96B6-4F6F-8274-179D7A27835E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{0C0973B7-5E63-4B2D-A8A6-DCEAB5695948}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C0973B7-5E63-4B2D-A8A6-DCEAB5695948}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C0973B7-5E63-4B2D-A8A6-DCEAB5695948}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141C9EEE-8791-451A-B635-E9D9244CB075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141C9EEE-8791-451A-B635-E9D9244CB075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141C9EEE-8791-451A-B635-E9D9244CB075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141C9EEE-8791-451A-B635-E9D9244CB075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{110D0089-96B6-4F6F-8274-179D7A27835E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{110D0089-96B6-4F6F-8274-179D7A27835E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{110D0089-96B6-4F6F-8274-179D7A27835E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{110D0089-96B6-4F6F-8274-179D7A27835E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

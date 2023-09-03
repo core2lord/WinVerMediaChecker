@@ -1,0 +1,94 @@
+﻿<Window
+    x:Class="WinVerMediaChecker.alpha_MainWIndowNew"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="860"
+    Height="640"
+    mc:Ignorable="d"
+    AllowsTransparency="False"
+    Background="Black"
+    Title="alpha_MainWindowNew"
+    WindowStyle="ToolWindow">
+    <Window.Resources>
+        <Color x:Key="RibbonBackgroundLightGrayColor">#FFAAAAAA</Color>
+        <SolidColorBrush x:Key="RibbonBackgroundLightGrayBrush" Color="{StaticResource RibbonBackgroundLightGrayColor}" />
+        <Color x:Key="RibbonBackgroundGrayColor">#AF666666</Color>
+        <SolidColorBrush x:Key="RibbonBackgroundGrayBrush" Color="{StaticResource RibbonBackgroundGrayColor}" />
+
+        <Color x:Key="RibbonBackgroundDarkGrayColor">#AF222222</Color>
+        <SolidColorBrush x:Key="RibbonBackgroundDarkGrayBrush" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+
+        <LinearGradientBrush x:Key="LinearGradientBrush.LightGray.DarkGray" StartPoint="0.1 0" EndPoint="0.1 1">
+            <GradientStopCollection>
+                <GradientStop Offset="1" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+                <GradientStop Offset=".9" Color="{StaticResource RibbonBackgroundGrayColor}" />
+                <GradientStop Offset=".1" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+                <GradientStop Offset=".3" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+                <GradientStop Offset=".6" Color="{StaticResource RibbonBackgroundGrayColor}" />
+                <GradientStop Offset="1" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+
+            </GradientStopCollection>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BlueGradient.LinearBrush" StartPoint="1 0" EndPoint="1 2">
+            <GradientStop Offset=".1" Color="{StaticResource RibbonBackgroundDarkGrayColor}" />
+            <GradientStop Offset=".5" Color="DarkGray" />
+            <GradientStop Offset=".5" Color="Transparent" />
+        </LinearGradientBrush>
+
+    </Window.Resources>
+    <Grid Background="{StaticResource LinearGradientBrush.LightGray.DarkGray}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="RibbonGridMain">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="8"
+                Background="{StaticResource BlueGradient.LinearBrush}"
+                BorderBrush="{StaticResource Window.Background.Brush}"
+                BorderThickness="1"
+                CornerRadius="2"
+                Padding="60">
+                <StackPanel Orientation="Horizontal">
+                    <Ribbon ShowQuickAccessToolBarOnTop="False"
+                            Background="Transparent">
+                        <Ribbon.ApplicationMenu>
+                            <RibbonApplicationMenu Visibility="Collapsed" />
+                        </Ribbon.ApplicationMenu>
+                        <RibbonTab Background="Black"
+                                   Header="Main">
+                            <RibbonGroup Header="Group1" Background="Transparent">
+                                <RibbonButton x:Name="RButtonRefresh"
+                                              FontFamily="Consolas"
+                                              Label="Refresh"
+                                              LargeImageSource="/Images/Refresh_Icon.png"
+                                              IsEnabled="False">
+                                </RibbonButton>
+                            </RibbonGroup>
+                        </RibbonTab>
+                        <RibbonTabHeader Content="TabHeader">
+
+                        </RibbonTabHeader>
+                    </Ribbon>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

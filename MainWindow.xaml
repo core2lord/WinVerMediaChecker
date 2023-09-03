@@ -16,10 +16,11 @@
     ResizeMode="CanMinimize"
     SizeToContent="WidthAndHeight"
     UseLayoutRounding="True"
-    WindowStyle="ToolWindow"
+    WindowStyle="None"
+    Deactivated="Window_Deactivated"
     mc:Ignorable="d">
     <Grid>
-        <Grid.ColumnDefinitions>
+    <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -54,9 +55,7 @@
                     <ComboBox
                         x:Name="ReadyDrivesComboBox"
                         Grid.ColumnSpan="2"
-                        Margin="10,5"
-                        SelectionChanged="ReadyDrivesComboBox_SelectionChanged" />
-
+                        Margin="10,5"/>
                     <local:CustomButton
                         x:Name="RefreshDrivesButton"
                         Grid.Row="1"
@@ -150,9 +149,9 @@
                 BorderThickness="2"
                 CornerRadius="2">
                 <Border.Background>
-                    <LinearGradientBrush Opacity="0.5" StartPoint="0.5,0" EndPoint="0.5,1">
-                        <GradientStop Offset="0.5" Color="Black" />
-                        <GradientStop Offset="1" Color="White" />
+                    <LinearGradientBrush Opacity="0.15" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0.765" Color="Black" />
+                        <GradientStop Offset=".9" Color="White" />
                     </LinearGradientBrush>
                 </Border.Background>
                 <ScrollViewer

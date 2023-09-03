@@ -84,9 +84,6 @@ public partial class MainWindow : Window
 
     private void ExecuteCommandButton_Click(object sender, RoutedEventArgs e)
     {
-        VersionCheckerCommand versionChecker = new(this);
-        versionChecker.ExecuteCommandSync(validatedImageFileName);
-        ExecuteCommandButton.IsEnabled = false;
     }
 
     private void ReadyDrivesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -199,26 +196,35 @@ public partial class MainWindow : Window
     {
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         public event EventHandler? CanExecuteChanged;
+        string validatedImageFileName { get; set; } = string.Empty;
 
         public bool CanExecute(object? parameter)
         {
-            if (!mainWindow.mediaValidation.IsWindowsMedia(mainWindow.ReadyDrivesComboBox.selectedRoot, out string _))
+            var selectedRoot = parameter as DirectoryInfo;
+            if (!mainWindow.mediaValidation.IsWindowsMedia(selectedRoot, out string validatedImageFileName))
             {
-                this.StorageVerifyLabel.Content = "\uEA39";
-                StorageVerifyLabel.Foreground = redBrush;
-                ExecuteCommandButton.IsEnabled = false;
-                if (!selectionCache.Contains(selectedIndex))
-                {
-                    AppendResultsLogText($"Unable to verify [{CurrentDriveSelection.Content.ToString()!.ToUpper()}] storage as valid Microsoft Windows Operating System installation source");
-                    selectionCache.Add(selectedIndex);
-                }
-                return true;
+                mainWindow.StorageVerifyLabel.Content = "\uEA39";
+                mainWindow.StorageVerifyLabel.Foreground = mainWindow.redBrush;
+                mainWindow.ExecuteCommandButton.IsEnabled = false;
+                return false;
             }
+            return true;
         }
 
         public void Execute(object? parameter)
         {
-            throw new NotImplementedException();
+            if (CanExecute(parameter)) 
+            {
+                VersionCheckerCommand versionChecker = new(mainWindow);
+                versionChecker.ExecuteCommandSync(validatedImageFileName);
+                mainWindow.ExecuteCommandButton.IsEnabled = false;
+            }
+            
         }
+    }
+
+    private void Window_Deactivated(object sender, EventArgs e)
+    {
+
     }
 }
